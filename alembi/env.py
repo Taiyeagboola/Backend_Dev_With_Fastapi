@@ -6,11 +6,27 @@ from sqlalchemy import pool
 from alembic import context
 from app.models import Base
 from app.config import settings
+import os
+
+# Try to read DATABASE_URL first (Render)
+database_url = os.getenv("DATABASE_URL")
+config = context.config
+if database_url:
+    # Render/Postgres cloud DB
+    config.set_main_option("sqlalchemy.url", database_url)
+else:
+    # Local development settings
+    from app.config import settings
+    config.set_main_option(
+        "sqlalchemy.url",
+        f"postgresql+psycopg2://{settings.database_username}:{settings.database_password}"
+        f"@{settings.database_hostname}:{settings.database_port}/{settings.database_name}"
+    )
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-config = context.config
-config.set_main_option("sqlalchemy.url", f"postgresql+psycopg2://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}")
+# config = context.config
+# config.set_main_option("sqlalchemy.url", f"postgresql+psycopg2://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
