@@ -17,7 +17,13 @@ def get_users(db: Session = Depends(get_db)):
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Truncate password to 72 bytes before hashing
     
-
+    existing_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="User with this email already exists"
+        )
+    
     password_hash = utils.hash(user.password)
     user.password = password_hash
     

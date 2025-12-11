@@ -19,7 +19,7 @@ class Post(PostBase):
     owner_id: int
     owner: 'UserOut'
 
-    class Config:
+    class ConfigDict:
         orm_mode = True
 
 class UserCreate(BaseModel):
@@ -32,7 +32,7 @@ class UserOut(BaseModel):
     created_at: datetime
     
 
-    class Config:
+    class ConfigDict:
         orm_mode = True
 
 class PostOut(BaseModel):
