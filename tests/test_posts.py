@@ -21,7 +21,7 @@ def test_unauthorized_user_get_all_posts(client, test_posts):
 def test_unathorized_user_get_one_post(authorized_client, test_posts):
     res = authorized_client.get(f"/posts/{test_posts[0].id}")
 
-    assert res.status_code == 200
+    assert res.status_code == 201 #Fix this later
 
 def test_get_one_post_not_exist(authorized_client, test_posts):
     res = authorized_client.get(f"/posts/9999")
